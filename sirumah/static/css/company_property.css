@@ -1,0 +1,169 @@
+.company-property-section {
+    min-height: 20vh;
+    position: relative;
+    overflow: hidden;
+}
+
+.company-property-content {
+    padding-top: 80px;
+    padding-bottom: 50px;
+}
+
+ .btn {
+    /* padding: 0.8rem 1.5rem !important; */
+    border: none;
+    /* border-radius: 25px !important; */
+    cursor: pointer;
+    font-weight: 500 !important;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.back-btn {
+    background: none !important;
+    color: black !important;
+    margin-bottom: 1rem;
+}
+
+.property-section {
+    padding-top: 30px;
+    margin-bottom: 80px;
+    background: #ffffff;
+}
+
+/* Property Cards */
+.properties-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.property-card {
+    background: white;
+    border-radius: 15px;
+    padding: 16px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.property-card:hover {
+    transform: translateY(-5px);
+}
+
+.property-image {
+    height: 200px;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.property-details {
+    padding: 1.5rem;
+}
+
+.property-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.property-price {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #667eea;
+    margin-bottom: 1rem;
+}
+
+.property-location {
+    font-size: 1rem;
+}
+
+.property-specs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.spec-item {
+    text-align: center;
+    padding: 0.5rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.spec-label {
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 0.3rem;
+}
+
+.spec-value {
+    font-weight: bold;
+    color: #333;
+}
+
+.back-btn {
+    background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+    margin-bottom: 1rem;
+}
+
+/* Spesifikasi */
+.property-specifications {
+    background: #f8f9fa;
+    padding: 10px 15px;
+    border-radius: 8px;
+    box-shadow: inset 0 0 4px rgba(0,0,0,0.05);
+}
+
+.property-specifications h5 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.spec-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.spec-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* border-bottom: 1px dashed #ddd; */
+    padding: 4px 0;
+    font-size: 0.9rem;
+}
+
+.spec-name {
+    font-weight: 500;
+    color: #444;
+}
+
+.spec-val {
+    font-weight: 600;
+    color: #222;
+}
+
+.spec-dot {
+    flex: 1;
+    /* border-bottom: 1px dotted #ccc; */
+    margin: 0 5px;
+}

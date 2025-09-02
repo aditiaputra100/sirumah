@@ -1,0 +1,55 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Django
+*.log
+*.pot
+*.pyc
+*.sqlite3
+*.db
+local_settings.py
+.env.*
+*.env
+
+# Virtualenv
+venv/
+ENV/
+env/
+venv.bak/
+pyvenv.cfg
+Lib/
+Include/
+Scripts/
+
+# VSCode
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Static & Media
+staticfiles/
+media/
+
+# Jupyter
+.ipynb_checkpoints
+
+# Others
+*.bak
+*.swp
+*.swo
+
+# Node
+node_modules/
+
+# MySQL
+mysql.cnf
+
+# Docker
+docker*.dev*
+Dockerfile.dev

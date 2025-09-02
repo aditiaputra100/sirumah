@@ -1,0 +1,186 @@
+{% extends './base.html' %}
+{% block title %}Kontak kami{% endblock %}
+
+{% block content %}
+
+<section class="hero-section">
+    <div class="container">
+        <div class="align-items-center hero-content">
+            <h1 class="hero-title">Hubungi Kami</h1>
+            <p class="hero-subtitle">Tim support kami siap membantu Anda menemukan rumah impian</p>
+        </div>
+    </div>
+</section>
+<!-- 
+<section class="contact-section">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-lg-8">
+                <div class="contact-form">
+                    <h3 class="mb-4"><i class="bi bi-envelope me-2"></i>Kirim Pesan</h3>
+                    <form>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="nama" class="form-label">Nama Lengkap</label>
+                                    <input type="text" class="form-control" id="nama" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="telefon" class="form-label">Nomor Telefon</label>
+                                    <input type="tel" class="form-control" id="telefon">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="subjek" class="form-label">Subjek</label>
+                                    <select class="form-select" id="subjek">
+                                        <option>Pertanyaan Umum</option>
+                                        <option>Bantuan Pencarian Rumah</option>
+                                        <option>Kemitraan Perusahaan</option>
+                                        <option>Keluhan & Saran</option>
+                                        <option>Lainnya</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="pesan" class="form-label">Pesan</label>
+                            <textarea class="form-control" id="pesan" rows="5" required></textarea>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="newsletter">
+                            <label class="form-check-label" for="newsletter">
+                                Saya ingin menerima newsletter dan update properti terbaru
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-send me-2"></i>Kirim Pesan
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="contact-info">
+                    <h4 class="mb-4">Informasi Kontak</h4>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="bi bi-geo-alt"></i>
+                        </div>
+                        <div>
+                            <h6>Alamat Kantor</h6>
+                            <p class="mb-0">Jl. Raya Gubeng No. 123<br>Surabaya, Jawa Timur 60281</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="bi bi-telephone"></i>
+                        </div>
+                        <div>
+                            <h6>Telepon</h6>
+                            <p class="mb-0">+62 31 5555-1234<br>+62 821-3456-7890</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="bi bi-envelope"></i>
+                        </div>
+                        <div>
+                            <h6>Email</h6>
+                            <p class="mb-0">info@housedecisionpro.com<br>support@housedecisionpro.com</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="bi bi-clock"></i>
+                        </div>
+                        <div>
+                            <h6>Jam Operasional</h6>
+                            <p class="mb-0">Senin - Jumat: 08:00 - 17:00<br>Sabtu: 09:00 - 15:00</p>
+                        </div>
+                    </div>
+
+                    <hr class="my-4" style="border-color: rgba(255,255,255,0.3);">
+                    
+                    <h6 class="mb-3">Ikuti Kami</h6>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-white" style="font-size: 1.5rem;">
+                            <i class="bi bi-facebook"></i>
+                        </a>
+                        <a href="#" class="text-white" style="font-size: 1.5rem;">
+                            <i class="bi bi-instagram"></i>
+                        </a>
+                        <a href="#" class="text-white" style="font-size: 1.5rem;">
+                            <i class="bi bi-twitter"></i>
+                        </a>
+                        <a href="#" class="text-white" style="font-size: 1.5rem;">
+                            <i class="bi bi-linkedin"></i>
+                        </a>
+                        <a href="#" class="text-white" style="font-size: 1.5rem;">
+                            <i class="bi bi-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+
+             
+                <div class="card card-custom mt-4 p-3">
+                    <h6 class="mb-3"><i class="bi bi-question-circle me-2"></i>FAQ Cepat</h6>
+                    <div class="accordion accordion-flush" id="faqAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                    Bagaimana cara menggunakan sistem?
+                                </button>
+                            </h2>
+                            <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Masuk ke menu "Cari Rumah", tentukan kriteria dan bobot kepentingan, lalu sistem akan memberikan rekomendasi terbaik.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                    Apakah data rumah selalu update?
+                                </button>
+                            </h2>
+                            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Ya, database kami terintegrasi dengan perusahaan partner dan diupdate secara real-time setiap hari.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                    Bagaimana cara bergabung sebagai perusahaan?
+                                </button>
+                            </h2>
+                            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Hubungi tim partnership kami melalui email partnership@housedecisionpro.com atau telepon langsung.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section> -->
+
+{% endblock %}

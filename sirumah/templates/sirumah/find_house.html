@@ -1,0 +1,152 @@
+{% extends 'sirumah/base.html' %}
+{% block title %}Cari Rumah{% endblock %}
+{% load currency %}
+{% block content %}
+
+<section class="hero-section overflow-visible">
+    <div class="container">
+        <div class="align-items-center hero-content">
+            <h1 class="hero-title">Cari Rumah</h1>
+            <p class="hero-subtitle">Temukan rumah impian Anda dengan metode keputusan sesuai preferensi anda</p>
+        </div>
+    </div>
+    <form class="criteria-container" method="post" action="{% url 'find_house' %}">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <p class="criteria-title">Bobot Kriteria</p>
+        <div class="row mb-3">
+            <div class="col-auto">
+                <label for="{{form.location.id_for_label}}" class="col-form-label">{{form.location.label}}</label>
+                <input class="form-control" type="number" name="location" id="{{form.location.id_for_label}}" min="1" max="9" required>
+            </div>
+            <div class="col-auto">
+                <label for="{{form.price.id_for_label}}" class="col-form-label">{{form.price.label}}</label>
+                <input class="form-control" type="number" name="price" id="{{form.price.id_for_label}}" min="1" max="9" required>
+            </div>
+            <div class="col-auto">
+                <label for="{{form.building_area.id_for_label}}" class="col-form-label">{{form.building_area.label}}</label>
+                <input class="form-control" type="number" name="building_area" id="{{form.building_area.id_for_label}}" min="1" max="9" required>
+            </div>
+            <div class="col-auto">
+                <label for="{{form.land_area.id_for_label}}" class="col-form-label">{{form.land_area.label}}</label>
+                <input class="form-control" type="number" name="land_area" id="{{form.land_area.id_for_label}}" min="1" max="9" required>
+            </div>
+            <div class="col-auto">
+                <label for="{{form.specification.id_for_label}}" class="col-form-label">{{form.specification.label}}</label>
+                <input class="form-control" type="number" name="specification" id="{{form.specification.id_for_label}}" min="1" max="9" required>
+            </div>
+            <div class="col-auto">
+                <label for="{{form.facility.id_for_label}}" class="col-form-label">{{form.facility.label}}</label>
+                <input class="form-control" type="number" name="facility" id="{{form.facility.id_for_label}}" min="1" max="9" required>
+            </div>
+        </div>
+        <!-- <p class="criteria-title">Bobot Sub kriteria</p>
+        <div class="row">
+            <div class="col-auto">
+                <label for="sub_location" class="col-form-label">Lokasi</label>
+                <select class="form-select" name="sub_location" id="sub_location">
+                    <option value="5">Dekat dengan pusat kota (≤5 km)</option>
+                    <option value="3">Sedang (5-10 km)</option>
+                    <option value="1">Jauh (>10 km)</option>
+                </select>
+            </div>
+            <div class="col-auto">
+                <label for="sub_price" class="col-form-label">Harga</label>
+                <select class="form-select" name="sub_price" id="sub_price">
+                    <option value="5">Murah (≤ Rp. 300 jt)</option>
+                    <option value="3">Sedang (Rp. 300 jt - Rp. 500 jt)</option>
+                    <option value="1">Mahal (> Rp. 500 jt)</option>
+                </select>
+            </div>
+            <div class="col-auto">
+                <label for="sub_bulding_area" class="col-form-label">Luas Bangunan</label>
+                <select class="form-select" name="sub_bulding_area" id="sub_bulding_area">
+                    <option value="5">Kecil (≤36 m²)</option>
+                    <option value="3">Sedang (36-60 m²)</option>
+                    <option value="1">Besar (>60 m²)</option>
+                </select>
+            </div>
+            <div class="col-auto">
+                <label for="sub_land_area" class="col-form-label">Luas Lahan</label>
+                <select class="form-select" name="sub_land_area" id="sub_land_area">
+                    <option value="5">Kecil (≤70 m²)</option>
+                    <option value="3">Sedang (70-100 m²)</option>
+                    <option value="1">Besar (>100 m²)</option>
+                </select>
+            </div>
+            <div class="col-auto">
+                <label for="sub_specification" class="col-form-label">Spesifikasi</label>
+                <select class="form-select" name="sub_specification" id="sub_specification">
+                    <option value="5">Material premium</option>
+                    <option value="3">Material standar</option>
+                    <option value="1">Material sederhana</option>
+                </select>
+            </div>
+            <div class="col-auto">
+                <label for="sub_facility" class="col-form-label">Fasilitas</label>
+                <select class="form-select" name="sub_facility" id="sub_facility">
+                    <option value="5">Premium</option>
+                    <option value="3">Standar</option>
+                    <option value="1">Sederhana</option>
+                </select>
+            </div>
+        </div> -->
+        <p>{{error_message}}</p>
+        <div class="d-flex justify-content-end mt-4">
+            <button type="submit" class="btn btn-primary px-4">Cari Rumah</button>
+        </div>
+    </form>
+</section>
+
+<section class="find-house-result">
+    <div class="container">
+        {% if house_recomendation %}
+            <h2>Rekomendasi rumah</h2>
+            <div class="row g-4 mb-3">
+                {% for house in house_recomendation %}
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card house-card position-relative">
+                            <!-- Badge Ranking -->
+                            <span class="ranking-badge">{{ forloop.counter }}</span>
+
+                            <div class="card-body">
+                                <h5 class="card-title">{{house.real_estate.name}}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">{{house.real_estate.village}}, {{house.real_estate.subdistrict}}</h6>
+                                <p class="card-text">Tipe: {{house.house_type}}</p>
+                                <p class="card-text">Luas Bangunan: {{house.building_area}}</p>
+                                <p class="card-text">Luas Lahan: {{house.land_area}}</p>
+                                <p class="card-text">Harga: {{house.price|currency}}</p>
+                                <a href="#" class="btn btn-primary">Lihat Detail</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <hr/>
+        {% endif %}
+        <h2>Daftar rumah</h2>
+        {% if houses %}
+            <div class="row g-4">
+                {% for house in houses %}
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card house-card">
+                            <div class="card-body">
+                                <h5 class="card-title">{{house.real_estate.name}}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">{{house.real_estate.village}}, {{house.real_estate.subdistrict}}</h6>
+                                <p class="card-text">Tipe: {{house.house_type}}</p>
+                                <p class="card-text">Luas Bangunan: {{house.building_area}}</p>
+                                <p class="card-text">Luas Lahan: {{house.land_area}}</p>
+                                <p class="card-text">Harga: {{house.price|currency}}</p>
+                                <a href="#" class="btn btn-primary">Lihat Detail</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-muted">Tidak ada data rumah tersedia.</p>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}

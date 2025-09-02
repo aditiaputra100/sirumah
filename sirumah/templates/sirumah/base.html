@@ -1,0 +1,71 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block css %}{% endblock %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.2/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg fixed-top">
+      <div class="container">
+        <a href="{% url 'home' %}" class="navbar-brand"><i class="bi bi-house-heart-filll me-2">Sirumah</i></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <!-- <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </li> -->
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'home' %}">Beranda</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'find_house' %}">Cari rumah</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'company' %}">Perusahaan</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'contact' %}">Kontak</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main>
+      {% block content %}
+      {% endblock %}
+    </main>
+
+    <footer class="footer text-center" id="contact">
+      <div class="container">
+          <div class="row">
+              <div class="col-12">
+                  <p class="mb-2">
+                      &copy; 2025 Sirumah. Dibuat dengan 
+                      <i class="bi bi-heart-fill text-danger mx-1"></i>
+                      menggunakan Django Framework.
+                  </p>
+                  <p class="mb-0">
+                      <i class="bi bi-envelope me-2"></i>aditia.putra100@gmail.com | 
+                      <i class="bi bi-telephone ms-3 me-2"></i>+62 821-xxxx-xxxx
+                  </p>
+              </div>
+          </div>
+      </div>
+    </footer> 
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+  </body>
+</html>

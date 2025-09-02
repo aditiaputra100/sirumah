@@ -1,0 +1,49 @@
+{% extends './base.html' %}
+{% load static %}
+{% load currency %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/company_property.css' %}">
+{% endblock %}
+{% block title %}{{company.name}}{% endblock %}
+
+{% block content %}
+
+<section class="company-property-section">
+    <div class="container">
+        <div class="company-property-content">
+            <a class="btn btn-primary back-btn" href="{% url 'company' %}">
+                <i class="bi bi-arrow-left-short"></i>
+                Kembali
+            </a>
+            <h1>{{company.name}}</h1>
+            <p class="text-muted d-flex gap-3">
+                <small><i class="bi bi-telephone me-1"></i> {{company.phone_number}}</small>
+                <small><i class="bi bi-envelope me-1"></i> {{company.email}}</small>
+                <small><i class="bi bi-geo-alt me-1"></i>{{company.address}}, {{company.village}}, {{company.subdistrict}}, {{company.district}}</small>
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="property-section">
+    <div class="container">
+        <div class="properties-grid">
+            {% for property in real_estate %}
+                <div class="property-card">
+                    <div class="property-title">{{property.name}}</div>
+                    <div class="property-price">{{property.min_price|currency}} ~ {{property.max_price|currency}}</div>
+                    <div class="property-specs">
+
+                    </div>
+                    <div class="mb-3">
+                        <small class="text-muted"><i class="bi bi-geo-alt"></i> {{property.village}}, {{property.subdistrict}}, {{property.district}}</small>
+
+                    </div>
+                    <a class="btn btn-outline-primary" href="{% url 'company_house' company_id=company.id real_estate_id=property.id %}">Lihat Detail</a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}

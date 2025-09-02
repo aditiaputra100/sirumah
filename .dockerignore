@@ -1,0 +1,23 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+*.log
+*.pot
+.git/
+.gitignore
+.vscode/
+node_modules/
+staticfiles/
+media/
+DockerFile
+mysql.cnf
+mysql_example.cnf
+*.swp
+*.swo
+*.bak
+
+# Jupyter
+.ipynb_checkpoints

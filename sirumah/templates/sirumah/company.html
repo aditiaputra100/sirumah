@@ -1,0 +1,52 @@
+{% extends './base.html' %}
+{% block title %}Perusahaan{% endblock %}
+
+{% block content %}
+
+<section class="hero-section">
+    <div class="container">
+        <div class="align-items-center hero-content">
+            <h1 class="hero-title">Perusahaan Real Estate</h1>
+            <p class="hero-subtitle">Perusahaan yang terdaftar pada sistem kami</p>
+        </div>
+    </div>
+</section>
+
+{% if companies %}
+
+<section class="company-section">
+    <div class="container">
+        <div class="row g-4">
+            {% for company in companies %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="company-card">
+                        <div class="company-logo">
+                            <i class="bi bi-building"></i>
+                        </div>
+                        <h4>{{company.name}}</h4>
+                        <div class="">
+                            <small class="text-muted">
+                                <i class="bi bi-telephone me-1"></i>{{company.phone_number}}
+                            </small>
+                        </div>
+                        <div class="">
+                            <small class="text-muted">
+                                <i class="bi bi-envelope me-1"></i>{{company.email}}
+                            </small>
+                        </div>
+                        <div class="mb-3">
+                            <small class="text-muted">
+                                <i class="bi bi-geo-alt me-1"></i>{{company.address}}, {{company.village}}, {{company.subdistrict}}, {{company.district}}
+                            </small>
+                        </div>
+                        <a class="btn btn-outline-primary" href="{% url 'company_property' company.id %}">Lihat Properti</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% endif %}
+
+{% endblock %}

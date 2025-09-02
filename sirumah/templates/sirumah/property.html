@@ -1,0 +1,73 @@
+{% extends './base.html' %}
+{% load static %}
+{% load currency %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/company_property.css' %}">
+{% endblock %}
+{% block title %}Properti{% endblock %}
+
+{% block content %}
+
+<section class="company-property-section">
+    <div class="container">
+        <div class="company-property-content">
+            <a class="btn btn-primary back-btn" href="{% url 'company_property' company.id %}">
+                <i class="bi bi-arrow-left-short"></i>
+                Kembali
+            </a>
+            <h1>Perumahaan {{real_estate.name}}</h1>
+            
+            <div class="mb-3">
+                <small class="text-muted"><i class="bi bi-geo-alt"></i> {{real_estate.village}}, {{real_estate.subdistrict}}, {{real_estate.district}}</small>
+            </div>
+            <p class="text-muted d-flex gap-3">
+                <small><i class="bi bi-telephone me-1"></i> {{company.phone_number}}</small>
+                <small><i class="bi bi-envelope me-1"></i> {{company.email}}</small>
+                <small><i class="bi bi-geo-alt me-1"></i>{{company.address}}, {{company.village}}, {{company.subdistrict}}, {{company.district}}</small>
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="property-section">
+    <div class="container">
+        <div class="properties-grid">
+            {% for house in houses %}
+                <div class="property-card">
+                    <div class="property-title">Tipe {{house.house_type}}</div>
+                    <div class="property-price">{{house.price|currency}}</div>
+                    <div class="property-specs">
+                        <div class="spec-item">
+                            <div class="spec-label">Luas Bangunan</div>
+                            <div class="spec-value">{{house.building_area}} m<sup>2</sup></div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Luas Tanah</div>
+                            <div class="spec-value">{{house.land_area}} m<sup>2</sup></div>
+                        </div>
+                        {% for attr in house.facility %}
+                            <div class="spec-item">
+                                <div class="spec-label">{{attr.name}}</div>
+                                <div class="spec-value">{{attr.value}}</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="property-specifications mt-3">
+                        <h5 class="mb-2">Spesifikasi</h5>
+                        <div class="spec-list">
+                            {% for attr in house.specification %}
+                                <div class="spec-row">
+                                    <span class="spec-name">{{attr.name}}</span>
+                                    <span class="spec-dot"></span>
+                                    <span class="spec-val">{{attr.value}}</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}
