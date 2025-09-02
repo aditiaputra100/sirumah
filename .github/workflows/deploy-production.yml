@@ -23,7 +23,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
             set -e
             cd /home/${{ secrets.VPS_USER }}/sirumah
-            git pull origin main .
+            git pull origin main
             docker-compose down
-            docker-compose up -d --build
+            docker-compose -p sirumah --env-file .env up -d --build
           EOF
