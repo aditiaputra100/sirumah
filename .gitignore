@@ -11,6 +11,7 @@ __pycache__/
 *.pyc
 *.sqlite3
 *.db
+*.sql
 local_settings.py
 .env.*
 *.env

@@ -12,14 +12,6 @@ RUN pip install --upgrade pip
 
 COPY requirements.txt /app/
 
-# RUN apt-get update && apt-get install -y \
-#     build-essential \
-#     pkg-config \
-#     default-libmysqlclient-dev \
-#     python3-dev \
-#     # Clean up apt cache to keep image size small
-#     && rm -rf /var/lib/apt/lists/*
-
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Stage 2: Production stage
@@ -46,6 +38,3 @@ RUN mkdir -p /app/staticfiles
 RUN mkdir -p /app/media
 
 EXPOSE 8080
-
-# CMD ["gunicorn", "spk.wsgi:application", "--bind", "0.0.0.0:8080", "--workers", "3"]
-# CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
