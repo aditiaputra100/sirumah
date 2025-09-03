@@ -29,6 +29,9 @@ RUN useradd -m -r appuser && \
    mkdir /app && \
    chown -R appuser /app
 
+RUN mkdir -p /app/staticfiles && chown -R appuser /app/staticfiles
+RUN mkdir -p /app/media && chown -R appuser /app/media
+
 COPY --from=builder /usr/local/lib/python3.13/site-packages/ /usr/local/lib/python3.13/site-packages/
 COPY --from=builder /usr/local/bin/ /usr/local/bin/
 
@@ -43,5 +46,5 @@ USER appuser
 
 EXPOSE 8080
 
-CMD ["gunicorn", "spk.wsgi:application", "--bind", "0.0.0.0:8080", "--workers", "3"]
+# CMD ["gunicorn", "spk.wsgi:application", "--bind", "0.0.0.0:8080", "--workers", "3"]
 # CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

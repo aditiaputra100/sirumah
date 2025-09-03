@@ -24,5 +24,6 @@ jobs:
             set -e
             cd /home/${{ secrets.VPS_USER }}/sirumah
             git pull origin main
-            docker-compose -p sirumah down
-            docker-compose -p sirumah --env-file .env up -d --build
+            docker build -t django-sirumah .
+            docker-compose -p sirumah-prod down
+            docker-compose -p sirumah-prod --env-file .env up -d --build
