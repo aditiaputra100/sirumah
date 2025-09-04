@@ -94,7 +94,7 @@ WSGI_APPLICATION = 'spk.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': os.environ.get('DATABASE_ENGINE', 'django.db.backends.mysql'),
+        'ENGINE': os.environ.get('DATABASE_ENGINE', 'mysql.connector.django'),
         'NAME': os.environ.get('DATABASE_NAME', 'polls'),
         'USER': os.environ.get('DATABASE_USERNAME', 'myprojectuser'),
         'PASSWORD': os.environ.get('DATABASE_PASSWORD', 'password'),
@@ -139,7 +139,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 

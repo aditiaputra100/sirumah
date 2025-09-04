@@ -34,7 +34,7 @@ Scripts/
 Thumbs.db
 
 # Static & Media
-staticfiles/
+static/
 media/
 
 # Jupyter

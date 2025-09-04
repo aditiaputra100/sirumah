@@ -9,10 +9,13 @@ __pycache__/
 .git/
 .gitignore
 .vscode/
+.venv
+.github
 node_modules/
-staticfiles/
+static/
 media/
 DockerFile
+docker-compose.*
 mysql.cnf
 mysql_example.cnf
 *.swp

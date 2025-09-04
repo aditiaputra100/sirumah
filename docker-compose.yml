@@ -36,12 +36,10 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./staticfiles:/app/staticfiles
+      - ./static:/app/static
       - ./media:/app/media
     command: >
-      sh -c "python manage.py collectstatic --noinput &&
-             python manage.py migrate &&
-             gunicorn spk.wsgi:application --bind 0.0.0.0:8080 --workers 3"
+      sh -c "python manage.py migrate"
     depends_on:
       db:
         condition: service_healthy
