@@ -68,6 +68,13 @@ def find_house(request):
     if request.method == 'POST':
         form = FindHouseWeightForm(request.POST)
         if form.is_valid():
+            if not houses.exists():
+                return render(request, 'sirumah/find_house.html', {
+                    'form': form,
+                    'houses': houses,
+                    'error_message': 'Mohon maaf tidak ada data rumah yang tersedia.',
+                })
+
             location_weight = form.cleaned_data['location']
             price_weight = form.cleaned_data['price']
             building_area_weight = form.cleaned_data['building_area']
@@ -91,7 +98,7 @@ def find_house(request):
                 })
 
             # criteria preferences -1 for cost, 1 for benefit
-            criteria_preferences = [1, 1, -1, -1, -1, -1]
+            criteria_preferences = [1, -1, 1, 1, 1, 1]
             # criteria_weights = [location_weight, price_weight, building_area_weight, land_area_weight, specification_weight, facility_weight]
 
             house_weights = HouseWeights.objects.all()
