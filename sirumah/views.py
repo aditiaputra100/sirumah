@@ -1,7 +1,6 @@
 from django.http import Http404
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Min, Max
-from django.views.decorators.csrf import csrf_exempt
 from demtpy import TOPSIS, AHP
 from .forms import FindHouseWeightForm
 from.models import House, Company, RealEstate, HouseWeights
@@ -63,7 +62,6 @@ def company_house(request, company_id: int, real_estate_id: int):
         'houses': houses,
     })
 
-@csrf_exempt
 def find_house(request):
     houses = House.objects.all()[:10]
 
