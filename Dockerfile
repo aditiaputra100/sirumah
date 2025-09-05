@@ -21,10 +21,13 @@ FROM builder AS production
 
 WORKDIR /app
 
-RUN python manage.py collectstatic --noinput
+RUN chmod +x ./entrypoint.sh
 
 RUN useradd -m -r appuser && \
    chown -R appuser /app
+
+RUN mkdir -p /app/static /app/media && \
+   chown -R appuser:appuser /app/static /app/media
 
 COPY --from=builder /usr/local/lib/python3.13/site-packages/ /usr/local/lib/python3.13/site-packages/
 COPY --from=builder /usr/local/bin/ /usr/local/bin/
@@ -34,4 +37,4 @@ ENV PYTHONUNBUFFERED=1
 
 USER appuser
 
-CMD ["gunicorn", "spk.wsgi:application", "--bind", "0.0.0.0:8080", "--workers", "3"]
+ENTRYPOINT ["/app/entrypoint.sh"]

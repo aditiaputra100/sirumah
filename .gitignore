@@ -50,7 +50,3 @@ node_modules/
 
 # MySQL
 mysql.cnf
-
-# Docker
-docker*.dev*
-Dockerfile.dev
