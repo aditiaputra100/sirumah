@@ -1,0 +1,29 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          script: |
+            set -e
+            cd /home/${{ secrets.VPS_USER }}/sirumah-stag
+            git pull origin dev
+            docker build --target production -t django-sirumah .
+            docker-compose -p sirumah-stag -f docker-compose.stag.yml down
+            docker-compose -p sirumah-stag -f docker-compose.stag.yml --env-file .env up -d --build
