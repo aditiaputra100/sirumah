@@ -28,11 +28,7 @@ DEBUG = bool( os.environ.get("DEBUG", False) )
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost").split(",")
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://sirumah.web.id",
-    "https://www.sirumah.web.id",
-    "https://dev.sirumah.web.id",
-]
+CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS", "http://localhost").split(",")
 
 # Application definition
 
