@@ -34,6 +34,7 @@ services:
       DATABASE_PASSWORD: ${DATABASE_PASSWORD}
       DATABASE_HOST: ${DATABASE_HOST}
       DATABASE_PORT: ${DATABASE_PORT}
+      DATABASE_TEST: ${DATABASE_TEST}
     volumes:
       - .:/app
     ports:
