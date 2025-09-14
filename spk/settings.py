@@ -28,6 +28,9 @@ DEBUG = bool( os.environ.get("DEBUG", False) )
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost").split(",")
 
+CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS", "http://localhost").split(",")
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Application definition
 
@@ -100,6 +103,9 @@ DATABASES = {
         'PASSWORD': os.environ.get('DATABASE_PASSWORD', 'password'),
         'HOST': os.environ.get('DATABASE_HOST', '127.0.0.1'),
         'PORT': os.environ.get('DATABASE_PORT', 3306),
+        "TEST": {
+            "NAME": os.environ.get('DATABASE_TEST', 'test_polls'),
+        },
     }
 }
 
