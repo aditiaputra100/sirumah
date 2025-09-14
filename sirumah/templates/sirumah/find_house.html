@@ -1,6 +1,10 @@
 {% extends 'sirumah/base.html' %}
 {% block title %}Cari Rumah{% endblock %}
+{% load static %}
 {% load currency %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/company_property.css' %}">
+{% endblock %}
 {% block content %}
 
 <section class="hero-section overflow-visible">
@@ -14,6 +18,7 @@
         {% csrf_token %}
         {{ form.non_field_errors }}
         <p class="criteria-title">Bobot Kriteria</p>
+        <p class="text-muted">Masukkan bobot kriteria 1-9. Semakin tinggi nilainya semakin penting kriterianya</p>
         <div class="row mb-3">
             <div class="col-auto">
                 <label for="{{form.location.id_for_label}}" class="col-form-label">{{form.location.label}}</label>
@@ -102,21 +107,41 @@
     <div class="container">
         {% if house_recomendation %}
             <h2>Rekomendasi rumah</h2>
-            <div class="row g-4 mb-3">
+            <div class="properties-grid">
                 {% for house in house_recomendation %}
-                    <div class="col-lg-4 col-md-6">
-                        <div class="card house-card position-relative">
-                            <!-- Badge Ranking -->
-                            <span class="ranking-badge">{{ forloop.counter }}</span>
-
-                            <div class="card-body">
-                                <h5 class="card-title">{{house.real_estate.name}}</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">{{house.real_estate.village}}, {{house.real_estate.subdistrict}}</h6>
-                                <p class="card-text">Tipe: {{house.house_type}}</p>
-                                <p class="card-text">Luas Bangunan: {{house.building_area}}</p>
-                                <p class="card-text">Luas Lahan: {{house.land_area}}</p>
-                                <p class="card-text">Harga: {{house.price|currency}}</p>
-                                <a href="#" class="btn btn-primary">Lihat Detail</a>
+                    <div class="property-card position-relative">
+                        <!-- Badge Ranking -->
+                        <span class="ranking-badge">{{ forloop.counter }}</span>
+                        <h5 class="property-title">Perumahaan {{house.real_estate.name}}</h5>
+                        <h6 class="property-subtitle">Tipe {{house.house_type}}</h6>
+                        <p class="text-muted">{{house.real_estate.village}}, {{house.real_estate.subdistrict}}</p>
+                        <p class="property-price">{{house.price|currency}}</p>
+                        <div class="property-specs">
+                            <div class="spec-item">
+                                <div class="spec-label">Luas Bangunan</div>
+                                <div class="spec-value">{{house.building_area}} m<sup>2</sup></div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">Luas Tanah</div>
+                                <div class="spec-value">{{house.land_area}} m<sup>2</sup></div>
+                            </div>
+                            {% for attr in house.facility %}
+                                <div class="spec-item">
+                                    <div class="spec-label">{{attr.name}}</div>
+                                    <div class="spec-value">{{attr.value}}</div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="property-specifications mt-3">
+                            <h5 class="mb-2">Spesifikasi</h5>
+                            <div class="spec-list">
+                                {% for attr in house.specification %}
+                                    <div class="spec-row">
+                                        <span class="spec-name">{{attr.name}}</span>
+                                        <span class="spec-dot"></span>
+                                        <span class="spec-val">{{attr.value}}</span>
+                                    </div>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
@@ -124,27 +149,27 @@
             </div>
             <hr/>
         {% endif %}
-        <h2>Daftar rumah</h2>
-        {% if houses %}
-            <div class="row g-4">
-                {% for house in houses %}
-                    <div class="col-lg-4 col-md-6">
-                        <div class="card house-card">
-                            <div class="card-body">
-                                <h5 class="card-title">{{house.real_estate.name}}</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">{{house.real_estate.village}}, {{house.real_estate.subdistrict}}</h6>
-                                <p class="card-text">Tipe: {{house.house_type}}</p>
-                                <p class="card-text">Luas Bangunan: {{house.building_area}}</p>
-                                <p class="card-text">Luas Lahan: {{house.land_area}}</p>
-                                <p class="card-text">Harga: {{house.price|currency}}</p>
-                                <a href="#" class="btn btn-primary">Lihat Detail</a>
-                            </div>
+
+        <h2>Daftar perumahaan</h2>
+        {% if real_estates %}
+            <div class="properties-grid">
+                {% for property in real_estates %}
+                    <div class="property-card">
+                        <div class="property-title">{{property.name}}</div>
+                        <div class="property-price">{{property.min_price|currency}} ~ {{property.max_price|currency}}</div>
+                        <div class="property-specs">
+
                         </div>
+                        <div class="mb-3">
+                            <small class="text-muted"><i class="bi bi-geo-alt"></i> {{property.village}}, {{property.subdistrict}}, {{property.district}}</small>
+
+                        </div>
+                        <a class="btn btn-outline-primary" href="{% url 'company_house' company_id=property.company.id real_estate_id=property.id %}">Lihat Detail</a>
                     </div>
                 {% endfor %}
             </div>
         {% else %}
-            <p class="text-muted">Tidak ada data rumah tersedia.</p>
+            <p class="text-muted">Tidak ada data perumahaan tersedia.</p>
         {% endif %}
     </div>
 </section>

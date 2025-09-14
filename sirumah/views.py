@@ -25,7 +25,6 @@ def company(request):
         )
 
 def company_property(request, company_id: int):
-    
     company = get_object_or_404(Company, pk=company_id)
     real_estate = company.realestate_set.annotate(min_price=Min('house__price'), max_price=Max('house__price'))
 
@@ -35,6 +34,9 @@ def company_property(request, company_id: int):
     })
 
 def company_house(request, company_id: int, real_estate_id: int):
+    # Get previous navigation url
+    previous_url = request.META.get('HTTP_REFERER', '/')
+
     company = get_object_or_404(Company, pk=company_id)
     real_estate = get_object_or_404(RealEstate, pk=real_estate_id)
 
@@ -57,17 +59,26 @@ def company_house(request, company_id: int, real_estate_id: int):
         house.specification = specification
 
     return render(request, 'sirumah/property.html', {
+        'previous_url': previous_url,
         'company': company,
         'real_estate': real_estate,
         'houses': houses,
     })
 
 def find_house(request):
-    houses = House.objects.all()[:10]
+    real_estates = RealEstate.objects.annotate(min_price=Min('house__price'), max_price=Max('house__price')).all()
 
     if request.method == 'POST':
+        houses = House.objects.all()[:10]
         form = FindHouseWeightForm(request.POST)
         if form.is_valid():
+            if not houses.exists():
+                return render(request, 'sirumah/find_house.html', {
+                    'form': form,
+                    'real_estates': real_estates,
+                    'error_message': 'Mohon maaf tidak ada data rumah yang tersedia.',
+                })
+
             location_weight = form.cleaned_data['location']
             price_weight = form.cleaned_data['price']
             building_area_weight = form.cleaned_data['building_area']
@@ -86,12 +97,12 @@ def find_house(request):
             if not ahp.is_consistency:
                 return render(request, 'sirumah/find_house.html', {
                     'form': form,
-                    'houses': houses,
+                    'real_estates': real_estates,
                     'error_message': 'Bobot yang diberikan tidak konsisten. Silakan sesuaikan kembali.',
                 })
 
             # criteria preferences -1 for cost, 1 for benefit
-            criteria_preferences = [1, 1, -1, -1, -1, -1]
+            criteria_preferences = [1, -1, 1, 1, 1, 1]
             # criteria_weights = [location_weight, price_weight, building_area_weight, land_area_weight, specification_weight, facility_weight]
 
             house_weights = HouseWeights.objects.all()
@@ -106,13 +117,13 @@ def find_house(request):
 
             return render(request, 'sirumah/find_house.html', {
                 'form': form,
-                'houses': houses,
+                'real_estates': real_estates,
                 'house_recomendation': houses_recomendation,
             })
     else:
         form = FindHouseWeightForm()
 
     return render(request, 'sirumah/find_house.html', {
-        'houses': houses,
+        'real_estates': real_estates,
         'form': form,
     })
