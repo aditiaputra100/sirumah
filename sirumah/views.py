@@ -102,7 +102,7 @@ def find_house(request):
                 })
 
             # criteria preferences -1 for cost, 1 for benefit
-            criteria_preferences = [1, -1, 1, 1, 1, 1]
+            criteria_preferences = [-1, -1, 1, 1, -1, -1]
             # criteria_weights = [location_weight, price_weight, building_area_weight, land_area_weight, specification_weight, facility_weight]
 
             house_weights = HouseWeights.objects.all()
@@ -114,6 +114,19 @@ def find_house(request):
             houses_with_scores = list(zip(house_weights, ranked_houses))
             houses_with_scores.sort(key=lambda x: x[1], reverse=True) # sort by score descending
             houses_recomendation = [hw[0].house for hw in houses_with_scores][:3]
+            
+            for house in houses_recomendation:
+                facility = []
+                specification = []
+                
+                for attr in house.attributes.all():
+                    if attr.attribute_type == 'facility':
+                        facility.append(attr)
+                    elif attr.attribute_type == 'spec':
+                        specification.append(attr)
+                    
+                house.facility = facility
+                house.specification = specification
 
             return render(request, 'sirumah/find_house.html', {
                 'form': form,
