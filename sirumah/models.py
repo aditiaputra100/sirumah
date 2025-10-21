@@ -70,3 +70,26 @@ class HouseWeights(models.Model):
 
     def __str__(self):
         return f"{self.house.house_type} | {self.house.real_estate.name} - Weights"
+
+
+class Criteria(models.Model):
+    name = models.CharField(max_length=100, unique=True, null=False)
+
+    def __str__(self):
+        return f"{self.name}"
+
+
+class SubCriteria(models.Model):
+    criteria = models.ForeignKey(Criteria, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100, unique=True, null=False)
+
+    def __str__(self):
+        return f"{self.name}"
+
+
+class SubCriteriaWeight(models.Model):
+    sub_criteria = models.OneToOneField(SubCriteria, on_delete=models.CASCADE)
+    weight = models.IntegerField(null=False)
+
+    def __str__(self):
+        return f"{self.sub_criteria.name}"

@@ -12,144 +12,65 @@
         <div class="align-items-center hero-content">
             <h1 class="hero-title">Cari Rumah</h1>
             <p class="hero-subtitle">Temukan rumah impian Anda dengan metode keputusan sesuai preferensi anda</p>
+            {% if house_recomendation %}
+                <div class="row">
+                    <div class="col-12">
+                        <h2 class="text-white">Rekomendasi rumah</h2>
+                    </div>
+                    <div class="col-12">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                        Ubah prioritas
+                        </button>
+                        
+                    </div>
+                </div>
+                <div class="properties-grid">
+                    {% for house in house_recomendation %}
+                        <div class="property-card position-relative">
+                            <!-- Badge Ranking -->
+                            <span class="ranking-badge">{{ forloop.counter }}</span>
+                            <h5 class="property-title">Perumahaan {{house.real_estate.name}}</h5>
+                            <h6 class="property-subtitle">Tipe {{house.house_type}}</h6>
+                            <p class="text-muted">{{house.real_estate.village}}, {{house.real_estate.subdistrict}}</p>
+                            <p class="property-price">{{house.price|currency}}</p>
+                            <div class="property-specs">
+                                <div class="spec-item">
+                                    <div class="spec-label">Luas Bangunan</div>
+                                    <div class="spec-value">{{house.building_area}} m<sup>2</sup></div>
+                                </div>
+                                <div class="spec-item">
+                                    <div class="spec-label">Luas Tanah</div>
+                                    <div class="spec-value">{{house.land_area}} m<sup>2</sup></div>
+                                </div>
+                                {% for attr in house.facility %}
+                                    <div class="spec-item">
+                                        <div class="spec-label">{{attr.name}}</div>
+                                        <div class="spec-value">{{attr.value}}</div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="property-specifications mt-3">
+                                <h5 class="mb-2">Spesifikasi</h5>
+                                <div class="spec-list">
+                                    {% for attr in house.specification %}
+                                        <div class="spec-row">
+                                            <span class="spec-name">{{attr.name}}</span>
+                                            <span class="spec-dot"></span>
+                                            <span class="spec-val">{{attr.value}}</span>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
         </div>
     </div>
-    <form class="criteria-container" method="post" action="{% url 'find_house' %}">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        <p class="criteria-title">Bobot Kriteria</p>
-        <p class="text-muted">Masukkan bobot kriteria 1-9. Semakin tinggi nilainya semakin penting kriterianya</p>
-        <div class="row mb-3">
-            <div class="col-auto">
-                <label for="{{form.location.id_for_label}}" class="col-form-label">{{form.location.label}}</label>
-                <input class="form-control" type="number" name="location" id="{{form.location.id_for_label}}" min="1" max="9" required>
-            </div>
-            <div class="col-auto">
-                <label for="{{form.price.id_for_label}}" class="col-form-label">{{form.price.label}}</label>
-                <input class="form-control" type="number" name="price" id="{{form.price.id_for_label}}" min="1" max="9" required>
-            </div>
-            <div class="col-auto">
-                <label for="{{form.building_area.id_for_label}}" class="col-form-label">{{form.building_area.label}}</label>
-                <input class="form-control" type="number" name="building_area" id="{{form.building_area.id_for_label}}" min="1" max="9" required>
-            </div>
-            <div class="col-auto">
-                <label for="{{form.land_area.id_for_label}}" class="col-form-label">{{form.land_area.label}}</label>
-                <input class="form-control" type="number" name="land_area" id="{{form.land_area.id_for_label}}" min="1" max="9" required>
-            </div>
-            <div class="col-auto">
-                <label for="{{form.specification.id_for_label}}" class="col-form-label">{{form.specification.label}}</label>
-                <input class="form-control" type="number" name="specification" id="{{form.specification.id_for_label}}" min="1" max="9" required>
-            </div>
-            <div class="col-auto">
-                <label for="{{form.facility.id_for_label}}" class="col-form-label">{{form.facility.label}}</label>
-                <input class="form-control" type="number" name="facility" id="{{form.facility.id_for_label}}" min="1" max="9" required>
-            </div>
-        </div>
-        <!-- <p class="criteria-title">Bobot Sub kriteria</p>
-        <div class="row">
-            <div class="col-auto">
-                <label for="sub_location" class="col-form-label">Lokasi</label>
-                <select class="form-select" name="sub_location" id="sub_location">
-                    <option value="5">Dekat dengan pusat kota (≤5 km)</option>
-                    <option value="3">Sedang (5-10 km)</option>
-                    <option value="1">Jauh (>10 km)</option>
-                </select>
-            </div>
-            <div class="col-auto">
-                <label for="sub_price" class="col-form-label">Harga</label>
-                <select class="form-select" name="sub_price" id="sub_price">
-                    <option value="5">Murah (≤ Rp. 300 jt)</option>
-                    <option value="3">Sedang (Rp. 300 jt - Rp. 500 jt)</option>
-                    <option value="1">Mahal (> Rp. 500 jt)</option>
-                </select>
-            </div>
-            <div class="col-auto">
-                <label for="sub_bulding_area" class="col-form-label">Luas Bangunan</label>
-                <select class="form-select" name="sub_bulding_area" id="sub_bulding_area">
-                    <option value="5">Kecil (≤36 m²)</option>
-                    <option value="3">Sedang (36-60 m²)</option>
-                    <option value="1">Besar (>60 m²)</option>
-                </select>
-            </div>
-            <div class="col-auto">
-                <label for="sub_land_area" class="col-form-label">Luas Lahan</label>
-                <select class="form-select" name="sub_land_area" id="sub_land_area">
-                    <option value="5">Kecil (≤70 m²)</option>
-                    <option value="3">Sedang (70-100 m²)</option>
-                    <option value="1">Besar (>100 m²)</option>
-                </select>
-            </div>
-            <div class="col-auto">
-                <label for="sub_specification" class="col-form-label">Spesifikasi</label>
-                <select class="form-select" name="sub_specification" id="sub_specification">
-                    <option value="5">Material premium</option>
-                    <option value="3">Material standar</option>
-                    <option value="1">Material sederhana</option>
-                </select>
-            </div>
-            <div class="col-auto">
-                <label for="sub_facility" class="col-form-label">Fasilitas</label>
-                <select class="form-select" name="sub_facility" id="sub_facility">
-                    <option value="5">Premium</option>
-                    <option value="3">Standar</option>
-                    <option value="1">Sederhana</option>
-                </select>
-            </div>
-        </div> -->
-        <p>{{error_message}}</p>
-        <div class="d-flex justify-content-end mt-4">
-            <button type="submit" class="btn btn-primary px-4">Cari Rumah</button>
-        </div>
-    </form>
 </section>
 
 <section class="find-house-result">
     <div class="container">
-        {% if house_recomendation %}
-            <h2>Rekomendasi rumah</h2>
-            <div class="properties-grid">
-                {% for house in house_recomendation %}
-                    <div class="property-card position-relative">
-                        <!-- Badge Ranking -->
-                        <span class="ranking-badge">{{ forloop.counter }}</span>
-                        <h5 class="property-title">Perumahaan {{house.real_estate.name}}</h5>
-                        <h6 class="property-subtitle">Tipe {{house.house_type}}</h6>
-                        <p class="text-muted">{{house.real_estate.village}}, {{house.real_estate.subdistrict}}</p>
-                        <p class="property-price">{{house.price|currency}}</p>
-                        <div class="property-specs">
-                            <div class="spec-item">
-                                <div class="spec-label">Luas Bangunan</div>
-                                <div class="spec-value">{{house.building_area}} m<sup>2</sup></div>
-                            </div>
-                            <div class="spec-item">
-                                <div class="spec-label">Luas Tanah</div>
-                                <div class="spec-value">{{house.land_area}} m<sup>2</sup></div>
-                            </div>
-                            {% for attr in house.facility %}
-                                <div class="spec-item">
-                                    <div class="spec-label">{{attr.name}}</div>
-                                    <div class="spec-value">{{attr.value}}</div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                        <div class="property-specifications mt-3">
-                            <h5 class="mb-2">Spesifikasi</h5>
-                            <div class="spec-list">
-                                {% for attr in house.specification %}
-                                    <div class="spec-row">
-                                        <span class="spec-name">{{attr.name}}</span>
-                                        <span class="spec-dot"></span>
-                                        <span class="spec-val">{{attr.value}}</span>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-            <hr/>
-        {% endif %}
-
         <h2>Daftar perumahaan</h2>
         {% if real_estates %}
             <div class="properties-grid">
@@ -174,4 +95,92 @@
     </div>
 </section>
 
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <form method="post" id="priorityForm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">Tentukan prioritas anda</h1>
+            <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+          </div>
+          <div class="modal-body">
+            <p>Pilih prioritas Anda (urutan dicatat sesuai waktu centang):</p>
+                {% csrf_token %}
+                <ul class="list-group">
+                {% for c in criteria %}
+                  <li class="list-group-item">
+                    <input type="checkbox" 
+                           class="priority-checkbox" 
+                           value="{{ c.name }}" 
+                           id="criteria-{{ c.id }}">
+                    <label for="criteria-{{ c.id }}">{{ c.name }}</label>
+                    <span class="badge bg-primary float-end order-label" style="display:none;"></span>
+                  </li>
+                {% endfor %}
+              </ul>
+              <!-- hidden input untuk kirim ke backend -->
+              <input type="hidden" name="priority_order" id="priorityOrder" required>
+          </div>
+          <div class="modal-footer">
+            <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+            <button type="submit" class="btn btn-primary">Simpan</button>
+          </div>
+        </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    {% if show_modal %}
+        var myModal = new bootstrap.Modal(document.getElementById('staticBackdrop'));
+        myModal.show();
+    {% endif %}
+
+
+    let order = [];  // simpan urutan pilihan
+    const checkboxes = document.querySelectorAll(".priority-checkbox");
+    const orderInput = document.getElementById("priorityOrder");
+
+    document.getElementById("priorityForm").addEventListener("submit", function(event) {
+    const checked = document.querySelectorAll(".priority-checkbox:checked").length;
+    
+    if (checked < 1) {
+        event.preventDefault(); // cegah submit
+        alert("Silakan pilih minimal 1 prioritas!");
+    }
+    });
+
+    checkboxes.forEach(cb => {
+        cb.addEventListener("change", function() {
+            const badge = cb.closest("li").querySelector(".order-label");
+
+            if (cb.checked) {
+                order.push([cb.id, cb.value]);  // tambahkan ke urutan
+                badge.innerText = order.length;
+                badge.style.display = "inline-block";
+            } else {
+                // hapus dari urutan
+                order = order.filter(v => v[1] !== cb.value);
+                badge.style.display = "none";
+
+                // refresh nomor urut
+                let i = 1;
+                order.forEach((id, value) => {
+                    const li = document.querySelector(`#${id}`).closest("li");
+                    li.querySelector(".order-label").innerText = i;
+                    i++;
+                });
+            }
+
+            // simpan ke hidden input
+            orderInput.value = JSON.stringify(order.map(v => v[1]));
+        });
+    });
+});
+</script>
 {% endblock %}

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django import forms
-from .models import Company, RealEstate, House, HouseAttribute, HouseWeights
+from .models import Company, RealEstate, House, HouseAttribute, HouseWeights, Criteria, SubCriteria
 
 
 class HouseAttributeInline(admin.TabularInline): 
@@ -60,8 +60,22 @@ class HouseWeightsAdmin(admin.ModelAdmin):
     list_display = ('house', 'location', 'price', 'building_area', 'land_area', 'specification', 'facility')
 
 
+class SubCriteriaInline(admin.TabularInline):
+    model = SubCriteria
+    extra = 3
+
+
+class CriteriaAdmin(admin.ModelAdmin):
+    list_display = ('name', 'sub_criteria_count')
+    inlines = [SubCriteriaInline]
+
+    def sub_criteria_count(self, obj):
+        return obj.subcriteria_set.count()
+
+
 # Register your models here.
 admin.site.register(Company, CompanyAdmin)
 admin.site.register(RealEstate, RealEstateAdmin)
 admin.site.register(House, HouseAdmin)
 admin.site.register(HouseWeights, HouseWeightsAdmin)
+admin.site.register(Criteria, CriteriaAdmin)

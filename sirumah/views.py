@@ -1,10 +1,12 @@
 from django.http import Http404
 from django.shortcuts import render, get_object_or_404
-from django.db.models import Min, Max
-from demtpy import TOPSIS, AHP
-from .forms import FindHouseWeightForm
-from.models import House, Company, RealEstate, HouseWeights
+from django.db.models import Min, Max, Prefetch
+from pymcdm.methods import TOPSIS
+from .forms import FindHouseWeightForm, FindHouseForm, PriorityForm, get_dyanamic_form
+from.models import House, Company, RealEstate, HouseWeights, Criteria, SubCriteria
+from .utils.ahp import AHP
 import numpy as np
+import json
 
 # Create your views here.
 def landing(request):
@@ -67,63 +69,80 @@ def company_house(request, company_id: int, real_estate_id: int):
 
 def find_house(request):
     real_estates = RealEstate.objects.annotate(min_price=Min('house__price'), max_price=Max('house__price')).all()
+    criteria = Criteria.objects.all()
+    criteria_list = ["Lokasi", "Harga", "Luas Bangunan", "Luas Lahan", "Spesifikasi", "Fasilitas"]
+    show_modal = "priority" not in request.session
 
     if request.method == 'POST':
-        houses = House.objects.all()[:10]
-        form = FindHouseWeightForm(request.POST)
-        if form.is_valid():
-            if not houses.exists():
-                return render(request, 'sirumah/find_house.html', {
-                    'form': form,
-                    'real_estates': real_estates,
-                    'error_message': 'Mohon maaf tidak ada data rumah yang tersedia.',
-                })
+        priority_order = json.loads(request.POST.get("priority_order", "[]"))
 
-            location_weight = form.cleaned_data['location']
-            price_weight = form.cleaned_data['price']
-            building_area_weight = form.cleaned_data['building_area']
-            land_area_weight = form.cleaned_data['land_area']
-            specification_weight = form.cleaned_data['specification']
-            facility_weight = form.cleaned_data['facility']
-
-            # Comparison matrix weights
-            criteria_weights = list(form.cleaned_data.values())[:6]
-            criteria_weights = np.array(criteria_weights, dtype=float)
-
-            comparison_matrix = criteria_weights[:, np.newaxis] / criteria_weights[np.newaxis, :]
-
-            ahp = AHP(comparison_matrix=comparison_matrix)
-
-            if not ahp.is_consistency:
-                return render(request, 'sirumah/find_house.html', {
-                    'form': form,
-                    'real_estates': real_estates,
-                    'error_message': 'Bobot yang diberikan tidak konsisten. Silakan sesuaikan kembali.',
-                })
-
-            # criteria preferences -1 for cost, 1 for benefit
-            criteria_preferences = [1, -1, 1, 1, 1, 1]
-            # criteria_weights = [location_weight, price_weight, building_area_weight, land_area_weight, specification_weight, facility_weight]
-
-            house_weights = HouseWeights.objects.all()
-            weights = list(house_weights.values_list('location', 'price', 'building_area', 'land_area', 'specification', 'facility'))
+        if len(priority_order) > 0:
+            request.session["priority"] = priority_order
             
-            topsis = TOPSIS(weights, criteria_preferences, ahp.weights)
-            ranked_houses = topsis.get_score() # return list[float]
-
-            houses_with_scores = list(zip(house_weights, ranked_houses))
-            houses_with_scores.sort(key=lambda x: x[1], reverse=True) # sort by score descending
-            houses_recomendation = [hw[0].house for hw in houses_with_scores][:3]
+            houses_recomendation = get_ranking_house(priority_order, criteria_list)
 
             return render(request, 'sirumah/find_house.html', {
-                'form': form,
                 'real_estates': real_estates,
+                'criteria': criteria,
                 'house_recomendation': houses_recomendation,
             })
-    else:
-        form = FindHouseWeightForm()
+
+    priority_order = request.session['priority'] if not show_modal else []
+    houses_recomendation = None
+
+    if len(priority_order) > 0:
+        houses_recomendation = get_ranking_house(priority_order, criteria_list)
 
     return render(request, 'sirumah/find_house.html', {
         'real_estates': real_estates,
-        'form': form,
+        'criteria': criteria,
+        'show_modal': show_modal,
+        'house_recomendation': houses_recomendation,
     })
+
+def get_ranking_house(priority, criteria):
+    scores = np.ones(len(criteria))
+
+    priority_value = len(criteria)
+    for idx, name in enumerate(priority):
+        pos = criteria.index(name)
+
+        scores[pos] = priority_value - idx
+    
+    scores = normalize_priorities(scores)
+
+    ahp = AHP(scoring=scores)
+    weights = ahp.weights
+
+    house_weights = HouseWeights.objects.all()
+    alt_weights = house_weights.values_list('location', 'price', 'building_area', 'land_area', 'specification', 'facility')
+    criteria_preference = [-1, -1, 1, 1, 1, 1]
+
+    topsis = TOPSIS()
+    ranked_houses = topsis(alt_weights, weights, criteria_preference)
+
+    houses_with_scores = list(zip(house_weights, ranked_houses))
+    houses_with_scores.sort(key=lambda x: x[1], reverse=True) # sort by score descending
+
+    return [hw[0].house for hw in houses_with_scores][:3]
+
+def normalize_priorities(weights):
+    weights = np.array(weights, dtype=int)
+    n = len(weights)
+
+    used = set(weights[weights > 1])
+
+    available = [i for i in range(n, 0, -1) if i not in used]
+
+    for i in range(n):
+        if weights[i] == 1:
+            weights[i] = available.pop(0)
+    
+    # dapatkan urutan ranking
+    ranks = sorted(range(len(weights)), key=lambda i: weights[i], reverse=True)
+    result = [0] * len(weights)
+
+    for rank, idx in enumerate(ranks):
+        result[idx] = rank + 1
+
+    return result
